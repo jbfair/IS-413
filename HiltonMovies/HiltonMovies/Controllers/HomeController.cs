@@ -34,7 +34,7 @@ namespace HiltonMovies.Controllers
         public IActionResult EnterMovie()
         {
             ViewBag.Categories = _MovieContext.categories.ToList();
-            return View();
+            return View(new MovieModel());
         }
 
         [HttpPost]
