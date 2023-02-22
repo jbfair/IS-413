@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HiltonMovies.Migrations
 {
     [DbContext(typeof(MovieDatabaseContext))]
-    [Migration("20230213232625_Initial")]
+    [Migration("20230222044148_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -17,15 +17,50 @@ namespace HiltonMovies.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.32");
 
+            modelBuilder.Entity("HiltonMovies.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CategoryID");
+
+                    b.ToTable("categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryID = 1,
+                            CategoryName = "Comedy"
+                        },
+                        new
+                        {
+                            CategoryID = 2,
+                            CategoryName = "Sports"
+                        },
+                        new
+                        {
+                            CategoryID = 3,
+                            CategoryName = "Comedy/Adventure"
+                        },
+                        new
+                        {
+                            CategoryID = 4,
+                            CategoryName = "Action/Adventure"
+                        });
+                });
+
             modelBuilder.Entity("HiltonMovies.Models.MovieModel", b =>
                 {
                     b.Property<int>("MovieID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Director")
                         .IsRequired()
@@ -54,13 +89,15 @@ namespace HiltonMovies.Migrations
 
                     b.HasKey("MovieID");
 
+                    b.HasIndex("CategoryID");
+
                     b.ToTable("responses");
 
                     b.HasData(
                         new
                         {
                             MovieID = 1,
-                            Category = "Comedy",
+                            CategoryID = 1,
                             Director = "Peter Farrelly",
                             Edited = false,
                             Rating = "PG-13",
@@ -70,7 +107,7 @@ namespace HiltonMovies.Migrations
                         new
                         {
                             MovieID = 2,
-                            Category = "Sports",
+                            CategoryID = 2,
                             Director = "Boaz Yakin",
                             Edited = false,
                             Rating = "PG",
@@ -80,13 +117,22 @@ namespace HiltonMovies.Migrations
                         new
                         {
                             MovieID = 3,
-                            Category = "Comedy/Adventure",
+                            CategoryID = 3,
                             Director = "Wes Anderson",
                             Edited = false,
                             Rating = "PG",
                             Title = "Fantastic Mr. Fox",
                             Year = 2009
                         });
+                });
+
+            modelBuilder.Entity("HiltonMovies.Models.MovieModel", b =>
+                {
+                    b.HasOne("HiltonMovies.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

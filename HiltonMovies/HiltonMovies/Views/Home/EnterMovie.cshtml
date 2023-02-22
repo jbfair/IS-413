@@ -3,11 +3,19 @@
 }
 
 @model HiltonMovies.Models.MovieModel;
-
+<div asp-validation-summary="All">
+</div>
 <div>
     <form method="post">
+        <input asp-for="MovieID" type="hidden"/>
         <label>Category:</label>
-        <input asp-for="Category"/>
+        <select asp-for="CategoryID">
+            <option value="">Select a Category</option>
+            @foreach(Category c in ViewBag.Categories)
+            {
+                <option value="@c.CategoryID">@c.CategoryName</option>
+            }
+        </select>
         <br />
 
         <label>Title:</label>
